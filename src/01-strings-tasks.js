@@ -18,10 +18,8 @@
  *   'aa',''    => 'aa'
  *   '',  'bb'  => 'bb'
  */
- function concatenateStrings(value1, value2) {
-
-  return (value1 + value2);
-
+function concatenateStrings(value1, value2) {
+  return value1 + value2;
 }
 
 /**
@@ -67,7 +65,7 @@ function getStringFromTemplate(firstName, lastName) {
  *   'Hello, Chuck Norris!' => 'Chuck Norris'
  */
 function extractNameFromTemplate(value) {
-  return value.split("").slice(8).join("");
+  return value.split('').slice(7, value.length - 1).join('');
 }
 
 
@@ -82,7 +80,7 @@ function extractNameFromTemplate(value) {
  *   'cat'       => 'c'
  */
 function getFirstChar(value) {
-  return value.split("").splice(0,1);
+  return value.split('').splice(0, 1);
 }
 
 /**
@@ -112,11 +110,7 @@ function removeLeadingAndTrailingWhitespaces(value) {
  *   'cat', 3 => 'catcatcat'
  */
 function repeatString(value, count) {
-  let output;
-  for(let i = 1; i <= count; i++ ) {
-  output += value;
-  };
-   return output;
+  return new Array(count + 1).join(value);
 }
 
 /**
@@ -132,7 +126,8 @@ function repeatString(value, count) {
  *   'ABABAB','BA' => 'ABAB'
  */
 function removeFirstOccurrences(str, value) {
- return str.split("").splice(str.indexOf(value), value.length);
+  const ind = str.indexOf(value);
+  return str.split('').filter((el, index) => index < ind || index > ind + value.length - 1).join('');
 }
 
 /**
@@ -147,7 +142,7 @@ function removeFirstOccurrences(str, value) {
  *   '<a>' => 'a'
  */
 function unbracketTag(str) {
-  return str.slice(1,4);
+  return str.slice(1, str.length - 1);
 }
 
 
@@ -181,7 +176,7 @@ function convertToUpperCase(str) {
  *   'info@gmail.com' => ['info@gmail.com']
  */
 function extractEmails(str) {
-  return str.split(";");
+  return str.split(';');
 }
 
 /**
@@ -207,8 +202,23 @@ function extractEmails(str) {
  *             '└──────────┘\n'
  *
  */
-function getRectangleString(/* width, height */) {
-  throw new Error('Not implemented');
+function getRectangleString(width, height) {
+  const topStart = '┌';
+  const topEnd = '┐';
+  const bottomStart = '└';
+  const bottomEnd = '┘';
+  const border = '│';
+  let str = '';
+  for (let i = 1; i <= height; i += 1) {
+    if (i === 1) {
+      str = `${str}${topStart}${new Array(width / 2).join('──')}${topEnd}\n`;
+    } else if (i === height) {
+      str = `${str}${bottomStart}${new Array(width / 2).join('──')}${bottomEnd}\n`;
+    } else {
+      str = `${str}${border}${new Array(width - 1).join(' ')}${border}\n`;
+    }
+  }
+  return str;
 }
 
 
@@ -228,8 +238,23 @@ function getRectangleString(/* width, height */) {
  *    => 'NOPQRSTUVWXYZABCDEFGHIJKLMnopqrstuvwxyzabcdefghijklm'
  *
  */
-function encodeToRot13(/* str */) {
-  throw new Error('Not implemented');
+function encodeToRot13(str) {
+  return str.split('').map((char) => {
+    const n = char.charCodeAt(0);
+    if (n >= 65 && n <= 77) {
+      return String.fromCharCode(char.charCodeAt(0) + 13);
+    }
+    if (n >= 78 && n <= 90) {
+      return String.fromCharCode(char.charCodeAt(0) - 13);
+    }
+    if (n >= 97 && n <= 109) {
+      return String.fromCharCode(char.charCodeAt(0) + 13);
+    }
+    if (n >= 110 && n <= 122) {
+      return String.fromCharCode(char.charCodeAt(0) - 13);
+    }
+    return char;
+  }).join('');
 }
 
 /**
@@ -246,7 +271,7 @@ function encodeToRot13(/* str */) {
  *   isString(new String('test')) => true
  */
 function isString(value) {
-  return (typeof value === "string");
+  return (typeof value === 'string' || value instanceof String);
 }
 
 
